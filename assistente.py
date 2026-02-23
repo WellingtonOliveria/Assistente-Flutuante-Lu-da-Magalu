@@ -1,7 +1,8 @@
 import sys
 import subprocess
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtGui import QIcon, QPixmap
 
 
 class Assistente(QWidget):
@@ -16,7 +17,7 @@ class Assistente(QWidget):
             Qt.Tool
         )
 
-        self.setFixedSize(180, 200)
+        self.setFixedSize(200, 350)
 
         # Variáveis para arrastar
         self.dragging = False
@@ -29,27 +30,31 @@ class Assistente(QWidget):
         top_layout = QVBoxLayout()
         top_layout.addStretch()  # Empurra o botão para a direita
         btn_fechar = QPushButton("X")
-        btn_fechar.setFixedSize(30, 30)
+        btn_fechar.setFixedSize(15, 15)
         btn_fechar.setStyleSheet("background-color: red; color: white; font-weight: bold;")
         btn_fechar.clicked.connect(self.close)
         top_layout.addWidget(btn_fechar)
 
         layout.addLayout(top_layout)
 
+        # Carregar imagem da Lu
+        imagem_path = r"c:\Users\wton1\OneDrive\Assitente Flutuante Lu\Lu_do_magalu (1).png"
+        
         btn_chrome = QPushButton("Abrir Chrome")
-        btn_chrome.clicked.connect(lambda: self.abrir_programa("chrome"))
+        btn_chrome.setIcon(QIcon(imagem_path))
+        btn_chrome.setIconSize(QSize(80, 80))
+        btn_chrome.setFixedSize(150, 150)
+        btn_chrome.clicked.connect(lambda: self.abrir_programa("chrome", "http://gfl.sinclog.com.br/"))
 
-        btn_bloco = QPushButton("Bloco de Notas")
-        btn_bloco.clicked.connect(lambda: self.abrir_programa("notepad"))
-
+        
 
         btn_explorer = QPushButton("Explorador")
+        btn_explorer.setIcon(QIcon(imagem_path))
+        btn_explorer.setIconSize(QSize(80, 80))
+        btn_explorer.setFixedSize(150, 150)
         btn_explorer.clicked.connect(lambda: self.abrir_programa("explorer"))
 
         layout.addWidget(btn_chrome)
-        layout.addWidget(btn_bloco)
-        layout.addWidget(btn_explorer)
-        layout.addWidget(btn_bloco)
         layout.addWidget(btn_explorer)
         
 
@@ -71,11 +76,14 @@ class Assistente(QWidget):
         if event.button() == Qt.LeftButton:
             self.dragging = False
 
-    def abrir_programa(self, comando):
+    def abrir_programa(self, comando, url="http://gfl.sinclog.com.br/"):
 
         if comando == "chrome":
             caminho = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
-            subprocess.Popen(caminho)
+            if url:
+                subprocess.Popen([caminho, url])
+            else:
+                subprocess.Popen(caminho)
 
 
         elif comando == "notepad":
