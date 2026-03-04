@@ -41,13 +41,22 @@ class TesteAssistente(QDialog):
 
         # Configuração da janela de diálogo ajustável
         self.setWindowTitle("Teste Assistente Lu")
-        self.setGeometry(500, 200, 300, 300)
+        self.setGeometry(1500, 500, 300, 800)
         self.setFixedSize(400, 400)  # Trava a janela em tamanho fixo
 
         # ===== IMAGEM GRANDE (fundo) =====
         self.imagem = QLabel(self)
-        pixmap = QPixmap("Lu_do_magalu (1).png")
+        # constrói caminho absoluto relativo ao script para evitar problemas de
+        # diretório de trabalho atual
+        import os
+        basedir = os.path.dirname(__file__)
+        imagem_path = os.path.join(basedir, "Lu_do_magalu (1).png")
+        pixmap = QPixmap(imagem_path)
+        if pixmap.isNull():
+            # mensagens de debug ajudam a diagnosticar o erro de carregamento
+            print(f"erro ao carregar imagem de fundo: {imagem_path}")
         self.imagem.setPixmap(pixmap)
+        self.imagem.setGeometry(0, 0, 400, 400)
         self.imagem.setScaledContents(True)
        
 
@@ -67,11 +76,10 @@ class TesteAssistente(QDialog):
         """)
 
         self.botao_inicio.clicked.connect(self.abrir_site)
+    
         
 
-    def resizeEvent(self, event):
-        super().resizeEvent(event)
-        self.imagem.setGeometry(0, 0, self.width(), self.height())
+    
 
     def update_button_position(self):
         # Calcula tamanho do botão proporcional ao tamanho da janela
